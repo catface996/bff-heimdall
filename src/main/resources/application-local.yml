@@ -4,16 +4,11 @@ zuul:
     #  禁止访问
     ignored-patterns: /*/private/**
     # 面向服务的路由
-    api-manager:
-      path: /manager/**
+    service-eden:
+      path: /eden/**
       retryable: false
       stripPrefix: true
-      url: http://app-manager:9001
-    api-paycore:
-      path: /paycore/**
-      retryable: false
-      stripPrefix: true
-      url: http://app-paycore:8802
+      url: http://service-eden:7701
     root:
       path: /
       url: forward:/index

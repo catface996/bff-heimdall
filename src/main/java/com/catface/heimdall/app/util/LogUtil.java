@@ -69,7 +69,7 @@ public class LogUtil {
     Long duration = System.currentTimeMillis() - startTime;
 
     // 构造响应状态和耗时
-    jsonObject.fluentPut("apiStatus", status).fluentPut("apiDuration", duration).fluentPut("managerUrl", url);
+    jsonObject.fluentPut("apiStatus", status).fluentPut("apiDuration", duration).fluentPut("url", url);
   }
 
   /**
