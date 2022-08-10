@@ -1,0 +1,20 @@
+
+zuul:
+  routes:
+    #  禁止访问
+    ignored-patterns: /*/private/**
+    # 面向服务的路由
+    api-manager:
+      path: /manager/**
+      retryable: false
+      stripPrefix: true
+      url: http://app-manager:19000
+    root:
+      path: /
+      url: forward:/index
+    actuator:
+      path: /actuator/**
+      url: forward:/actuator
+    error:
+      path: /**
+      url: forward:/unRecognize

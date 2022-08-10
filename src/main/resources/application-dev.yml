@@ -1,0 +1,51 @@
+
+zuul:
+  routes:
+    #  禁止访问
+    ignored-patterns: /*/private/**
+    # 面向服务的路由
+    api-manager:
+      path: /manager/**
+      retryable: false
+      stripPrefix: true
+      url: http://app-manager:19000
+    api-paycore:
+      path: /paycore/**
+      retryable: false
+      stripPrefix: true
+      url: http://app-paycore:8802
+    api-opscore:
+      path: /opscore/**
+      retryable: false
+      stripPrefix: true
+      url: http://app-opscore:18004
+    api-spscore:
+      path: /spscore/**
+      retryable: false
+      stripPrefix: true
+      url: http://app-spscore:18003
+    api-mpscore:
+      path: /mpscore/**
+      retryable: false
+      stripPrefix: true
+      url: http://app-mpscore:18002
+    api-tradecore:
+      path: /tradecore/**
+      retryable: false
+      stripPrefix: true
+      url: http://app-tradecore:8801
+    api-watchdog:
+      path: /watchdog/**
+      retryable: false
+      stripPrefix: true
+      url: http://app-watchdog:19999
+    root:
+      path: /
+      url: forward:/index
+    actuator:
+      path: /actuator/**
+      url: forward:/actuator
+    error:
+      path: /**
+      url: forward:/unRecognize
+

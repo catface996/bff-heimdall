@@ -1,0 +1,68 @@
+server:
+  port: 8001
+  tomcat:
+    threads:
+      max: 200 # Maximum amount of worker threads.
+      min-spare: 64
+
+zuul:
+  # 忽略头部的跨域信息
+  #需要忽略的头部信息，不在传播到其他服务
+  sensitive-headers: Access-Control-Allow-Origin
+  ignored-headers: Access-Control-Allow-Origin,H-APP-Id,Token,APPToken
+  host:
+    max-total-connections: 1000
+    max-per-route-connections: 200
+    connect-timeout-millis: 6500
+    # socket 为了兼容m端文件下载,设置为20s
+    socket-timeout-millis: 10000
+  #是否开启重试功能
+  retryable: false
+  # 负载隔离机制
+  ribbon-isolation-strategy: thread
+  # 是否去除路径中的前缀
+  strip-prefix: true
+  routes:
+    intelligentsia-authority:
+      sensitiveHeaders: Authorization
+
+heimdall:
+  publicApi: public
+  anonApi: anonymous
+  privateApi: private
+
+# 熔断保护超时时间
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            # 熔断保护时间要大于等于 ribbonTimeout
+            timeoutInMilliseconds: 10000
+  # 负载均衡超时时间
+  #ribbonTimeout = (50000 + 50000) * (0 + 1) * (1 + 1) = 200000
+  #ribbonTimeout = (ribbonReadTimeout + ribbonConnectTimeout) * (maxAutoRetries + 1) * (maxAutoRetriesNextServer + 1);
+ribbon:
+  # 为了兼容m端文件下载,设置为20s
+  ReadTimeout: 9000
+  ConnectTimeout: 1000
+  MaxAutoRetries: 0
+  MaxAutoRetriesNextServer: 0
+
+info:
+  name: ${spring.application.name}
+  version: none
+  evn: ${spring.profiles.active}
+
+management:
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+rpc:
+  watchdog:
+    url: xxxx
+
