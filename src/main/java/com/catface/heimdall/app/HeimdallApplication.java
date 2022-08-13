@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @SpringBootApplication
 @EnableZuulProxy
-@EnableFeignClients(basePackages = {})
+@EnableFeignClients(basePackages = {"com.catface.eden.api"})
 public class HeimdallApplication {
 
   public static void main(String[] args) {

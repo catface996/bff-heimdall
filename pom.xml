@@ -32,6 +32,11 @@
             <groupId>com.catface.common</groupId>
             <version>1.0.2-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <artifactId>api</artifactId>
+            <groupId>com.catface.eden</groupId>
+            <version>0.0.2-SNAPSHOT</version>
+        </dependency>
         <!-- 公共二方包 end-->
 
         <dependency>
@@ -112,46 +117,43 @@
         </dependencies>
     </dependencyManagement>
 
+    <distributionManagement>
+        <repository>
+            <id>catface-releases</id>
+            <name>Internal Release Repository</name>
+            <url>https://packages.aliyun.com/maven/repository/2263316-release-fCNbjQ/</url>
+        </repository>
+        <snapshotRepository>
+            <id>catface-snapshots</id>
+            <name>Internal Snapshot Repository</name>
+            <url>https://packages.aliyun.com/maven/repository/2263316-snapshot-suITWv/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <repositories>
         <repository>
-            <id>yoli-rdc-releases</id>
-            <name>yoli-rdc-releases</name>
-            <url>https://packages.aliyun.com/maven/repository/2195687-release-8OAmUO/</url>
-            <layout>default</layout>
+            <id>catface-snapshots</id>
+            <name>Internal Public Repository</name>
+            <url>https://packages.aliyun.com/maven/repository/2263316-snapshot-suITWv/</url>
             <releases>
-                <enabled>true</enabled>
+                <enabled>false</enabled>
             </releases>
             <snapshots>
-                <enabled>false</enabled>
+                <enabled>true</enabled>
             </snapshots>
         </repository>
         <repository>
-            <id>yoli-rdc-snapshots</id>
-            <name>yoli-rdc-snapshots</name>
-            <url>https://packages.aliyun.com/maven/repository/2195687-snapshot-6jMj4f/</url>
-            <layout>default</layout>
+            <id>catface-releases</id>
+            <name>Internal Release Repository</name>
+            <url>https://packages.aliyun.com/maven/repository/2263316-release-fCNbjQ/</url>
             <releases>
-                <enabled>false</enabled>
+                <enabled>true</enabled>
             </releases>
             <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
+                <enabled>false</enabled>
             </snapshots>
         </repository>
     </repositories>
-
-    <distributionManagement>
-        <repository>
-            <id>yoli-rdc-releases</id>
-            <name>yoli-rdc-releases</name>
-            <url>https://packages.aliyun.com/maven/repository/2195687-release-8OAmUO/</url>
-        </repository>
-        <snapshotRepository>
-            <id>yoli-rdc-snapshots</id>
-            <name>yoli-rdc-snapshots</name>
-            <url>https://packages.aliyun.com/maven/repository/2195687-snapshot-6jMj4f/</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <build>
         <finalName>heimdall-app</finalName>

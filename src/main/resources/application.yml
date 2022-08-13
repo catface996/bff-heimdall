@@ -63,6 +63,6 @@ management:
       show-details: ALWAYS
 
 rpc:
-  watchdog:
-    url: xxxx
+  eden:
+    service: http://service-eden:7701
 

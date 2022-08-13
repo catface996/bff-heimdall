@@ -1,19 +1,21 @@
 package com.catface.heimdall.app.filter;
 
 import com.alibaba.fastjson.JSONObject;
+import com.catface.common.model.JsonResult;
+import com.catface.eden.api.auth.AuthApi;
+import com.catface.eden.api.auth.request.CheckTokenRequest;
+import com.catface.eden.api.auth.vo.TokenInfoVO;
 import com.catface.heimdall.app.util.HttpUtil;
-
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
-
-
-import javax.servlet.http.HttpServletRequest;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 路由过滤器
@@ -25,6 +27,9 @@ public class PublicApiAuthorityFilter extends ZuulFilter {
 
     @Value("${heimdall.publicApi}")
     private String publicApi;
+
+    @Autowired
+    private AuthApi authApi;
 
 
     @Override
@@ -56,16 +61,13 @@ public class PublicApiAuthorityFilter extends ZuulFilter {
             if (needCheckLogin(url)) {
                 // 如果未获取到token,提示重新登录
                 String token = HttpUtil.getToken(ctx);
-                String userType = HttpUtil.getUserType(ctx);
                 if (!StringUtils.isBlank(token)) {
-                    boolean loginStatus = true;
+                    TokenInfoVO tokenInfo = checkToken(token);
                     //登录成功
-                    if (loginStatus) {
-                        Long userId = 121212L;
+                    if (tokenInfo != null) {
                         JSONObject requestBody = HttpUtil.getBodyDataToJson(ctx.getRequest());
-                        if (userId != null) {
-                            requestBody.put("userId", userId);
-                        }
+                        requestBody.put("ctxUserId", tokenInfo.getCtxUserId());
+                        requestBody.put("ctxClientId", tokenInfo.getCtxClientId());
                         HttpUtil.injectCommonParam(ctx, requestBody);
                         // 通过
                         HttpUtil.pass(ctx);
@@ -93,6 +95,22 @@ public class PublicApiAuthorityFilter extends ZuulFilter {
      */
     private boolean needCheckLogin(String url) {
         return url.contains(publicApi);
+    }
+
+    /**
+     * 校验token
+     *
+     * @param token token
+     * @return token代表的当前用户和客户
+     */
+    private TokenInfoVO checkToken(String token) {
+        CheckTokenRequest request = new CheckTokenRequest();
+        request.setToken(token);
+        JsonResult<TokenInfoVO> result = authApi.checkToken(request);
+        if (result.getSuccess()) {
+            return result.getData();
+        }
+        return null;
     }
 
 }
