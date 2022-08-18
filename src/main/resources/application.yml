@@ -65,4 +65,6 @@ management:
 rpc:
   eden:
     service: http://service-eden:7701
+  bkb:
+    service: http://service-bkb:7002
 

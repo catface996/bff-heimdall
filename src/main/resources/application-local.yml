@@ -9,6 +9,11 @@ zuul:
       retryable: false
       stripPrefix: true
       url: http://service-eden:7701
+    service-bkb:
+      path: /bkb/**
+      retryable: false
+      stripPrefix: true
+      url: http://service-bkb:7002
     root:
       path: /
       url: forward:/index

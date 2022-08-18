@@ -5,6 +5,7 @@ import com.catface.common.model.JsonResult;
 import com.catface.eden.api.auth.AuthApi;
 import com.catface.eden.api.auth.request.CheckTokenRequest;
 import com.catface.eden.api.auth.vo.TokenInfoVO;
+import com.catface.heimdall.app.integration.AuthorityService;
 import com.catface.heimdall.app.util.HttpUtil;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
@@ -30,6 +31,9 @@ public class PublicApiAuthorityFilter extends ZuulFilter {
 
     @Autowired
     private AuthApi authApi;
+
+    @Autowired
+    private AuthorityService authorityService;
 
 
     @Override
@@ -57,6 +61,7 @@ public class PublicApiAuthorityFilter extends ZuulFilter {
         HttpServletRequest request = ctx.getRequest();
         try {
             String url = request.getRequestURI();
+            String bizDomainCode = request.getServerName();
             // 登录检查
             if (needCheckLogin(url)) {
                 // 如果未获取到token,提示重新登录
@@ -65,6 +70,14 @@ public class PublicApiAuthorityFilter extends ZuulFilter {
                     TokenInfoVO tokenInfo = checkToken(token);
                     //登录成功
                     if (tokenInfo != null) {
+                        // 权限检查
+                        boolean canAccess = authorityService.canAccess(tokenInfo.getCtxClientId(), tokenInfo.getCtxUserId(),
+                                bizDomainCode, url);
+                        if (!canAccess) {
+                            HttpUtil.noAuthority(ctx, "未授权,请联主账号持有人");
+                            return null;
+                        }
+                        // 通用参数注入
                         JSONObject requestBody = HttpUtil.getBodyDataToJson(ctx.getRequest());
                         requestBody.put("ctxUserId", tokenInfo.getCtxUserId());
                         requestBody.put("ctxClientId", tokenInfo.getCtxClientId());
