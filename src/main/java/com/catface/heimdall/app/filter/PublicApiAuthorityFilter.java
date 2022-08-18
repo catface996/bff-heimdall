@@ -1,6 +1,7 @@
 package com.catface.heimdall.app.filter;
 
 import com.alibaba.fastjson.JSONObject;
+import com.catface.common.enums.common.CommonConst;
 import com.catface.common.model.JsonResult;
 import com.catface.eden.api.auth.AuthApi;
 import com.catface.eden.api.auth.request.CheckTokenRequest;
@@ -79,8 +80,8 @@ public class PublicApiAuthorityFilter extends ZuulFilter {
                         }
                         // 通用参数注入
                         JSONObject requestBody = HttpUtil.getBodyDataToJson(ctx.getRequest());
-                        requestBody.put("ctxUserId", tokenInfo.getCtxUserId());
-                        requestBody.put("ctxClientId", tokenInfo.getCtxClientId());
+                        requestBody.put(CommonConst.CTX_USER_ID, tokenInfo.getCtxUserId());
+                        requestBody.put(CommonConst.CTX_CLIENT_ID, tokenInfo.getCtxClientId());
                         HttpUtil.injectCommonParam(ctx, requestBody);
                         // 通过
                         HttpUtil.pass(ctx);

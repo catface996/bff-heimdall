@@ -3,6 +3,7 @@ package com.catface.heimdall.app.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import com.catface.common.enums.common.CommonConst;
 import com.catface.common.model.JsonResult;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.http.HttpServletRequestWrapper;
@@ -52,7 +53,7 @@ public class HttpUtil {
   }
 
   public static String getToken(RequestContext ctx) {
-    return ctx.getRequest().getHeader("token");
+    return ctx.getRequest().getHeader(CommonConst.TOKEN);
   }
 
   public static String getUserType(RequestContext ctx) {
